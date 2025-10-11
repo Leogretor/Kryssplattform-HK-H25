@@ -1,7 +1,8 @@
 import { signIn, signOut } from "@/api/authApi";
 import { auth } from "@/firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged} from "firebase/auth";
 import {
   createContext,
   ReactNode,
@@ -46,7 +47,14 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
       }
       setIsLoading(false);
     });
-  }, []);
+  }, [])
+
+  // useEffect(() => {
+  //   AsyncStorage.getItem("authSession").then((value) => {
+  //     setUserSession(value);
+  //     setIsLoading(false);
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (isLoading) return;

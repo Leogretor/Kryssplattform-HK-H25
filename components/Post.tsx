@@ -12,7 +12,7 @@ export default function Post({ postData }: PostProps) {
     <Pressable
       onPress={() =>
         router.push({
-          pathname: "/post-details/[id]",
+          pathname: "/(app)/post-details/[id]",
           params: { id: postData.id },
         })
       }

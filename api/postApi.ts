@@ -6,18 +6,18 @@ import { uploadImageToFirebase } from "./imageApi";
 
 export async function createPost(post: PostData) {
     try {
-        const firebaseImage = await uploadImageToFirebase(post.imageUri);
+        const firebaseImage = await uploadImageToFirebase(post.imageUri)
         if (!firebaseImage) {
-            console.error("Error while uplaoding image");
+            console.error("error while uploading image");
             return;
         }
 
         const postImageDownloadUrl = await getDownloadUrl(firebaseImage);
         const postWithImage: PostData = {
-            ...post,
+            ...post, 
             imageUri: postImageDownloadUrl
         }
-        const docRef = await addDoc(collection(db, "posts"), postWithImage);
+        const docRef = await addDoc(collection(db, "posts"), postWithImage)
         console.log("Document written with ID: ", docRef.id);
     } catch(e) {
         console.log("Error creating post", e);

@@ -1,4 +1,5 @@
 import * as postApi from "@/api/postApi";
+import * as commentsApi from "@/api/commentsApi";
 import { useAuthSession } from "@/providers/authctx";
 import { PostData } from "@/types/post";
 import { getPostByLocalId, updatePostById } from "@/utils/local-storage";
@@ -69,7 +70,7 @@ export default function PostDetailsPage() {
             renderItem={(comment) => (
               <View style={styles.commentItem}>
                 <Text style={[styles.smallTextStyle, { color: "gray" }]}>
-                  {comment.item.author}:
+                  {comment.item.authorName}:
                 </Text>
                 <Text style={styles.smallTextStyle}>
                   {comment.item.comment}
@@ -86,21 +87,39 @@ export default function PostDetailsPage() {
             placeholder="Skriv en kommentar"
           />
           <Pressable
-            onPress={() => {
-              const postComments = post.comments;
-              postComments.push({
-                comment: commentText,
-                author: userNameSession ?? "Dette skal ikke skje",
-              });
-              // Dette kalles "object spread operator" og er en metode for å kopiere et object samtidig som man endrer en eller flere av verdiene
-              const updatedPost: PostData = {
-                ...post,
-                comments: postComments,
+            onPress={async () => {
+              if (!commentText.trim()) return;
+
+              const newComment = {
+                authorName: userNameSession ?? "Ukjent bruker",
+                authorId: "temp123",
+                comment: commentText.trim(),
               };
-              // cmd+click for å se hvor funksjonen er definert, den ligger under local-storage.tsx
-              updatePostById(id, updatedPost);
-              setPost(updatedPost);
-              setCommentText("");
+
+              try {
+                const commentId = await commentsApi.uploadComment(newComment);
+
+                const postComments = post.comments || [];
+                postComments.push({
+                  id: commentId,
+                  ...newComment,
+                });
+
+                const updatedPost: PostData = {
+                  ...post,
+                  comments: postComments,
+                };
+
+                await updatePostById(id, updatedPost);
+                setPost(updatedPost);
+                setCommentText("");
+                console.log(
+                  "Kommentar lastet opp til Firebase med ID:",
+                  commentId
+                );
+              } catch (error) {
+                console.error("Feil ved opplasting av kommentar:", error);
+              }
             }}
           >
             <Text style={styles.smallTextStyle}>Legg til</Text>

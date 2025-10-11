@@ -1,5 +1,4 @@
 import { Redirect, Stack } from "expo-router";
-import "react-native-reanimated";
 
 import { useAuthSession } from "@/providers/authctx";
 import { Text, View } from "react-native";
