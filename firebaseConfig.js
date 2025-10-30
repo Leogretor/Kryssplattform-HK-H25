@@ -18,7 +18,7 @@ export const auth = initializeAuth(app, {
 
 GoogleSignin.configure({
   webClientId:
-    "431526135951-vb5ij9s1fuiqu99k0vecrs54ku9dmsbn.apps.googleusercontent.com",
+    "375700181421-338cbpovcsvscl9gm7tuvr7m6uqg8n5n.apps.googleusercontent.com",
 });
 
 export const db = getFirestore(app);
